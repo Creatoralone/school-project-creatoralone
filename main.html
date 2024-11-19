@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Marketplace - Seasonal Discount</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Navbar Styles */
+        nav {
+            background-color: #343a40;
+            padding: 10px 20px;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        nav ul li a:hover {
+            color: #f39c12;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-image: url('https://via.placeholder.com/2000x800?text=Fresh+Food+Marketplace');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .hero h1 {
+            font-size: 3em;
+            margin: 0;
+        }
+        .hero p {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+
+        /* Food Item Section */
+        .food-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .food-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            margin: 15px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .food-card:hover {
+            transform: translateY(-5px);
+        }
+        .food-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .food-card h3 {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .food-card p {
+            color: #888;
+            margin: 10px 0;
+        }
+        .food-card .price {
+            font-size: 1.2em;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        .food-card .discount-price {
+            font-size: 1.2em;
+            color: #e74c3c;
+            text-decoration: line-through;
+            margin-bottom: 10px;
+        }
+        .food-card button {
+            background-color: #2980b9;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .food-card button:hover {
+            background-color: #3498db;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px;
+            transition: right 0.3s ease-in-out;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .cart-sidebar.open {
+            right: 0;
+        }
+        .cart-sidebar h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        .cart-sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .cart-sidebar li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-sidebar .total {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .cart-sidebar .checkout-btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+        .cart-sidebar .checkout-btn:hover {
+            background-color: #f39c12;
+        }
+        .cart-sidebar .close-btn {
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+        .cart-sidebar .close-btn:hover {
+            background-color: #e74c3c;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            padding: 20px;
+            background-color: #f7f7f7;
+            margin: 20px;
+            border-radius: 8px;
+        }
+        .admin-panel input, .admin-panel button {
+            padding: 10px;
+            margin: 10px;
+            width: 100%;
+            font-size: 1em;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .food-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            .food-card {
+                width: 90%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="#" id="view-cart">View Cart</a></li>
+        <li><a href="#" id="profile-btn">Profile</a></li>
+        <li><a href="#" id="admin-btn" style="display:none;">Admin</a></li>
+        <li><a href="#" id="login-btn">Login</a></li>
+        <li><a href="#" id="logout-btn" style="display:none;">Logout</a></li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Welcome to the Food Marketplace</h1>
+    <p id="season-info"></p>
+</section>
+
+<!-- Food Items Section -->
+<section class="food-section" id="food-section">
+    <!-- Dynamic Products Will Be Loaded Here -->
+</section>
+
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cart-sidebar">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <div class="total">
+        Total: $<span id="total-price">0.00</span>
+    </div>
+    <button class="checkout-btn" id="checkout-btn">Checkout</button>
+    <button class="close-btn" id="close-cart">Close Cart</button>
+</div>
+
+<!-- Admin Panel -->
+<div class="admin-panel" id="admin-panel">
+    <h2>Admin Panel</h2>
+    <label for="product-name">Product Name:</label>
+    <input type="text" id="product-name" placeholder="Enter product name">
+    <label for="product-price">Product Price:</label>
+    <input type="number" id="product-price" placeholder="Enter product price">
+    <label for="product-img">Product Image URL:</label>
+    <input type="text" id="product-img" placeholder="Enter image URL">
+    <button id="add-product-btn">Add Product</button>
+    <button id="remove-product-btn">Remove Product</button>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2024 Food Marketplace | All Rights Reserved</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Sample Products (Normally fetched from backend)
+        let meals = [
+            { id: 1, name: 'Apple', price: 1.00, img: 'https://via.placeholder.com/250' },
+            { id: 2, name: 'Banana', price: 0.50, img: 'https://via.placeholder.com/250' },
+            { id: 3, name: 'Chicken Breast', price: 5.00, img: 'https://via.placeholder.com/250' },
+            { id: 4, name: 'Beef Burger', price: 7.50, img: 'https://via.placeholder.com/250' },
+            { id: 5, name: 'Lettuce', price: 1.20, img: 'https://via.placeholder.com/250' },
+            { id: 6, name: 'Pork Chop', price: 6.50, img: 'https://via.placeholder.com/250' },
+            { id: 7, name: 'Salmon', price: 8.00, img: 'https://via.placeholder.com/250' },
+            { id: 8, name: 'Spinach', price: 2.20, img: 'https://via.placeholder.com/250' },
+            { id: 9, name: 'Tomato', price: 1.80, img: 'https://via.placeholder.com/250' },
+            { id: 10, name: 'Eggplant', price: 1.70, img: 'https://via.placeholder.com/250' },
+            { id: 11, name: 'Sweet Potato', price: 1.30, img: 'https://via.placeholder.com/250' },
+            { id: 12, name: 'Avocado', price: 2.50, img: 'https://via.placeholder.com/250' },
+            { id: 13, name: 'Mango', price: 2.80, img: 'https://via.placeholder.com/250' },
+            { id: 14, name: 'Beef Steak', price: 9.00, img: 'https://via.placeholder.com/250' },
+            { id: 15, name: 'Turkey Breast', price: 7.00, img: 'https://via.placeholder.com/250' },
+            { id: 16, name: 'Grapes', price: 3.50, img: 'https://via.placeholder.com/250' },
+            { id: 17, name: 'Watermelon', price: 4.00, img: 'https://via.placeholder.com/250' },
+            { id: 18, name: 'Cucumber', price: 1.60, img: 'https://via.placeholder.com/250' },
+            { id: 19, name: 'Zucchini', price: 1.40, img: 'https://via.placeholder.com/250' },
+            { id: 20, name: 'Potato', price: 0.80, img: 'https://via.placeholder.com/250' },
+            { id: 21, name: 'Cabbage', price: 1.00, img: 'https://via.placeholder.com/250' },
+            { id: 22, name: 'Olive Oil', price: 6.00, img: 'https://via.placeholder.com/250' },
+            { id: 23, name: 'Garlic', price: 0.50, img: 'https://via.placeholder.com/250' },
+            { id: 24, name: 'Onion', price: 0.60, img: 'https://via.placeholder.com/250' },
+            { id: 25, name: 'Coconut', price: 3.00, img: 'https://via.placeholder.com/250' },
+            { id: 26, name: 'Cauliflower', price: 2.30, img: 'https://via.placeholder.com/250' },
+            { id: 27, name: 'Peach', price: 2.40, img: 'https://via.placeholder.com/250' },
+            { id: 28, name: 'Pineapple', price: 3.20, img: 'https://via.placeholder.com/250' },
+            { id: 29, name: 'Lamb Chop', price: 10.50, img: 'https://via.placeholder.com/250' },
+            { id: 30, name: 'Duck Breast', price: 12.00, img: 'https://via.placeholder.com/250' },
+            { id: 31, name: 'Pomegranate', price: 3.60, img: 'https://via.placeholder.com/250' },
+            { id: 32, name: 'Cherries', price: 4.00, img: 'https://via.placeholder.com/250' },
+            { id: 33, name: 'Berries', price: 5.00, img: 'https://via.placeholder.com/250' },
+            { id: 34, name: 'Strawberries', price: 3.80, img: 'https://via.placeholder.com/250' },
+            { id: 35, name: 'Lemon', price: 1.00, img: 'https://via.placeholder.com/250' },
+            { id: 36, name: 'Olives', price: 4.50, img: 'https://via.placeholder.com/250' },
+            { id: 37, name: 'Chili', price: 0.90, img: 'https://via.placeholder.com/250' },
+            { id: 38, name: 'Coconut Milk', price: 2.20, img: 'https://via.placeholder.com/250' },
+            { id: 39, name: 'Tuna', price: 4.00, img: 'https://via.placeholder.com/250' },
+            { id: 40, name: 'Salmon Fillet', price: 7.20, img: 'https://via.placeholder.com/250' },
+            { id: 41, name: 'Squash', price: 2.00, img: 'https://via.placeholder.com/250' },
+            { id: 42, name: 'Spinach Leaves', price: 2.50, img: 'https://via.placeholder.com/250' },
+            { id: 43, name: 'Butternut Squash', price: 2.70, img: 'https://via.placeholder.com/250' },
+            { id: 44, name: 'Chicken Wings', price: 5.50, img: 'https://via.placeholder.com/250' },
+            { id: 45, name: 'Sausage', price: 3.80, img: 'https://via.placeholder.com/250' },
+            { id: 46, name: 'Chili Peppers', price: 1.30, img: 'https://via.placeholder.com/250' },
+            { id: 47, name: 'Pastrami', price: 6.20, img: 'https://via.placeholder.com/250' },
+            { id: 48, name: 'Cheese', price: 4.50, img: 'https://via.placeholder.com/250' },
+            { id: 49, name: 'Bacon', price: 4.00, img: 'https://via.placeholder.com/250' },
+            { id: 50, name: 'Brussels Sprouts', price: 2.90, img: 'https://via.placeholder.com/250' },
+            { id: 51, name: 'Avocado Toast', price: 3.00, img: 'https://via.placeholder.com/250' },
+            { id: 52, name: 'Eggs', price: 2.20, img: 'https://via.placeholder.com/250' },
+            { id: 53, name: 'Toast', price: 1.00, img: 'https://via.placeholder.com/250' },
+            { id: 54, name: 'Hummus', price: 2.50, img: 'https://via.placeholder.com/250' },
+            { id: 55, name: 'Kale', price: 3.00, img: 'https://via.placeholder.com/250' },
+            { id: 56, name: 'Bulgur Wheat', price: 3.40, img: 'https://via.placeholder.com/250' },
+            { id: 57, name: 'Pita Bread', price: 1.50, img: 'https://via.placeholder.com/250' },
+            { id: 58, name: 'Oatmeal', price: 2.00, img: 'https://via.placeholder.com/250' },
+            { id: 59, name: 'Peanut Butter', price: 3.20, img: 'https://via.placeholder.com/250' },
+            { id: 60, name: 'Granola', price: 3.80, img: 'https://via.placeholder.com/250' }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let total = parseFloat(localStorage.getItem('total')) || 0;
+        let user = JSON.parse(localStorage.getItem('user')) || null;
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+        // Apply Seasonal Discount
+        function applySeasonalDiscount(meals) {
+            const now = new Date();
+            const month = now.getMonth();
+            const seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
+            const season = seasons[Math.floor(month / 3)];
+
+            // Apply a random 20% discount to 25% of the meals
+            const discountedMeals = [...meals];
+            const discountCount = Math.floor(meals.length * 0.25);
+
+            // Randomly select items to discount
+            const indices = [];
+            while (indices.length < discountCount) {
+                const randomIndex = Math.floor(Math.random() * meals.length);
+                if (!indices.includes(randomIndex)) {
+                    indices.push(randomIndex);
+                }
+            }
+
+            // Apply the discount
+            indices.forEach(index => {
+                discountedMeals[index].discountedPrice = discountedMeals[index].price * 0.8;
+            });
+
+            return { discountedMeals, season };
+        }
+
+        // Load products and apply discounts
+        function loadProducts() {
+            const { discountedMeals, season } = applySeasonalDiscount(meals);
+
+            // Update seasonal discount info
+            $('#season-info').text(`Current Season: ${season} - 20% discount applied to selected items`);
+
+            // Clear the food section and append products
+            $('#food-section').empty();
+            discountedMeals.forEach(item => {
+                $('#food-section').append(`
+                    <div class="food-card" data-id="${item.id}" data-price="${item.discountedPrice || item.price}">
+                        <img src="${item.img}" alt="${item.name}">
+                        <h3>${item.name}</h3>
+                        <p>${item.discountedPrice ? `<span class="discount-price">$${item.price}</span>` : ''} $${item.discountedPrice || item.price}</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                `);
+            });
+        }
+
+        // Open Cart Sidebar
+        $('#view-cart').click(function() {
+            $('#cart-sidebar').addClass('open');
+        });
+
+        // Close Cart Sidebar
+        $('#close-cart').click(function() {
+            $('#cart-sidebar').removeClass('open');
+        });
+
+        // Add to Cart functionality
+        $(document).on('click', '.add-to-cart', function() {
+            const id = $(this).closest('.food-card').data('id');
+            const name = $(this).closest('.food-card').find('h3').text();
+            const price = parseFloat($(this).closest('.food-card').data('price'));
+
+            // Add product to cart
+            cart.push({ id, name, price });
+            total += price;
+
+            // Save to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('total', total);
+
+            updateCart();
+        });
+
+        // Update cart
+        function updateCart() {
+            $('#cart-items').empty();
+            cart.forEach(item => {
+                $('#cart-items').append(`<li>${item.name} - $${item.price.toFixed(2)}</li>`);
+            });
+            $('#total-price').text(total.toFixed(2));
+        }
+
+        // Checkout button
+        $('#checkout-btn').click(function() {
+            alert(`Checkout successful! Total: $${total.toFixed(2)}`);
+            orders.push({ cart, total, date: new Date() });
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Clear cart
+            cart = [];
+            total = 0;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('total', total);
+
+            updateCart();
+            $('#cart-sidebar').removeClass('open');
+        });
+
+        // User Authentication (Login/Logout)
+        function checkUser() {
+            if (user) {
+                $('#login-btn').hide();
+                $('#logout-btn').show();
+                $('#admin-btn').show();
+            } else {
+                $('#login-btn').show();
+                $('#logout-btn').hide();
+                $('#admin-btn').hide();
+            }
+        }
+
+        $('#login-btn').click(function() {
+            const username = prompt("Enter your username:");
+            const email = prompt("Enter your email:");
+            if (username && email) {
+                user = { username, email };
+                localStorage.setItem('user', JSON.stringify(user));
+                checkUser();
+            }
+        });
+
+        $('#logout-btn').click(function() {
+            user = null;
+            localStorage.removeItem('user');
+            checkUser();
+        });
+
+        // Admin Panel (show/hide)
+        $('#admin-btn').click(function() {
+            $('#admin-panel').toggle();
+        });
+
+        // Add product in admin panel
+        $('#add-product-btn').click(function() {
+            const name = $('#product-name').val();
+            const price = parseFloat($('#product-price').val());
+            const img = $('#product-img').val();
+
+            if (name && !isNaN(price) && img) {
+                meals.push({ id: meals.length + 1, name, price, img });
+                loadProducts(); // Reload products
+                alert('Product added successfully');
+            }
+        });
+
+        // Initialize app
+        loadProducts();
+        updateCart();
+        checkUser();
+    });
+</script>
+
+</body>
+</html>
