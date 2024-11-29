@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Marketplace - Seasonal Discount</title>
+    <title>Cheap Foods - Seasonal Discount</title>
     <style>
         /* Global Styles */
         body {
@@ -47,7 +47,7 @@
 
         /* Hero Section */
         .hero {
-            background-image: url('https://via.placeholder.com/2000x800?text=Fresh+Food+Marketplace');
+            background-image: url('https://via.placeholder.com/2000x800?text=Save+People+On+Cheap+Foods+By+Giving+10%+Of+The+Food+Away');
             background-size: cover;
             background-position: center;
             color: #fff;
@@ -232,7 +232,7 @@
 
 <!-- Hero Section -->
 <section class="hero">
-    <h1>Welcome to the Food Marketplace</h1>
+    <h1>Welcome to Cheap Foods</h1>
     <p id="season-info"></p>
 </section>
 
@@ -267,7 +267,7 @@
 
 <!-- Footer -->
 <footer>
-    <p>&copy; 2024 Food Marketplace | All Rights Reserved</p>
+    <p>&copy; 2024 Cheap Foods | All Rights Reserved</p>
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -339,6 +339,7 @@
 
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let total = parseFloat(localStorage.getItem('total')) || 0;
+        let totalS = parseFloat(localStorage.getItem('totalS')) || 0;
         let user = JSON.parse(localStorage.getItem('user')) || null;
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
 
@@ -429,7 +430,9 @@
 
         // Checkout button
         $('#checkout-btn').click(function() {
+            totalS = total / 10;
             alert(`Checkout successful! Total: $${total.toFixed(2)}`);
+            alert(`You saved a  total of: ${totalS.toFixed(2)} Kg of food away to the needed!`);
             orders.push({ cart, total, date: new Date() });
             localStorage.setItem('orders', JSON.stringify(orders));
 
