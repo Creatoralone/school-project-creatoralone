@@ -47,7 +47,7 @@ a<!DOCTYPE html>
 
         /* Hero Section */
         .hero {
-            background-image: url('https://via.placeholder.com/2000x800?text=Save+People+On+Cheap+Foods+By+Giving+10%+Of+The+Food+Away');
+            background-image: url('https://via.placeholder.com/2000x800?text=Save+People+On+Donation Market+By+Giving+Food+Away+To+The+Needed');
             background-size: cover;
             background-position: center;
             color: #fff;
@@ -431,8 +431,8 @@ a<!DOCTYPE html>
         // Checkout button
         $('#checkout-btn').click(function() {
             totalS = total / 10;
-            alert(`Checkout successful! Total: $${total.toFixed(2)}`);
-            alert(`You saved a  total of: ${totalS.toFixed(2)} Kg of food away to the needed!`);
+            alert(`Checkout successful! Total: $${total.toFixed(2)} for te food you donated!`);
+            alert(`You saved a  total of: ${totalS.toFixed(2)} additional Kg of food away to the people in need!!!`);
             orders.push({ cart, total, date: new Date() });
             localStorage.setItem('orders', JSON.stringify(orders));
 
