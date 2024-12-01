@@ -431,7 +431,7 @@
         $('#checkout-btn').click(function() {
             totalS = total / 10;
             alert(`Checkout successful! Total: $${total.toFixed(2)} for the food you donated!`);
-            alert(`You saved a  total of: ${totalS.toFixed(2)} additional Kg of food away to the people in need!!!`);
+            alert(`You saved a  total of: ${total+12.3.toFixed(2)} additional Kg of food away to the people in need!!!`);
             orders.push({ cart, total, date: new Date() });
             localStorage.setItem('orders', JSON.stringify(orders));
 
